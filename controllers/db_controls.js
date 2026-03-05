@@ -1,6 +1,7 @@
 const db = require('../db/db.js')
+const {nanoid} = require('nanoid')
 
-function checkindb(url,type){
+function getfromdb(url,type){
     const long = db.prepare(`SELECT * FROM codes WHERE ${type} = ?`).get(url);
     exists = (long)?long:false;
     console.log(`${type} IS IN DB : `,exists);
@@ -8,11 +9,13 @@ function checkindb(url,type){
 }
 
 
-
-function addtodb(url,type){
+function addtodb(url){
+    console.log('adding to DB')
     try{
-        const insert = db.prepare(`INSERT INTO codes (${type}) VALUES (?)`)
-        const result = insert.run(url)
+        const shortened = nanoid(10);
+        const insert = db.prepare(`INSERT INTO codes (long, short) VALUES (?, ?)`)
+        const result = insert.run(url,shortened)
+        console.log(shortened)
         console.log(result.lastInsertRowid)
     }
     catch(e){
@@ -28,6 +31,6 @@ function seedb(){
 }
 // seedb();
 
-module.exports = {checkindb, addtodb, seedb}
+module.exports = {getfromdb, addtodb, seedb}
 
 
