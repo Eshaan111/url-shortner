@@ -23,9 +23,18 @@ function add_to_cache(mapType,short,long){
 
 function get_from_cache(mapType,short,long){
     if(mapType == 'shortMap'){
-        return short_cache_map.get(short);
+        res =  short_cache_map.get(short);
+        if(res['expiresAt']<Date.now()){
+            short_cache_map.delete(short)
+        }
+        return res;
     }
-    return long_cache_map.get(long)
+
+    res = long_cache_map.get(long)
+    if(res['expiresAt']<Date.now()){
+            long_cache_map.delete(long)
+        }
+    return res;
     
 }
 
